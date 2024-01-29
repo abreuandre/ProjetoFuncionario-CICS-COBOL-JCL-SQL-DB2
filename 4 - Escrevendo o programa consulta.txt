@@ -1,0 +1,708 @@
+Escrevendo o programa consulta - Parte 1
+
+
+GR.EAD569.COBLIB(TELACONS) - 01.01
+
+                        #CONSULTA FUNCIONARIOS                                 #XXXXXXXXXXXX
+                                                                               #XXXXXXXXXX
+
+              #CODIGO DO FUNCIONARIO#XXXX#
+
+              #NOME         :#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+              #SALARIO      :#999999#,#99#
+              #DEPARTAMENTO :#XXX#
+              #ADMISSAO     :#99#/#99#/#9999#
+              #IDADE        :#99#
+              #EMAIL        :#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#
+
+#F3-MENU F7-ANTERIOR F8-PROXIMO F12-EXIT
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+============================================================================================================================
+
+GR.EAD569.COBLIB(AD569MB) - 01.01
+
+AD569MB DFHMSD TYPE=MAP,MODE=INOUT,LANG=COBOL,CTRL=FREEKB,TIOAPFX=YES
+MAPCONS DFHMDI SIZE=(24,80)
+*****************************************************
+        DFHMDF POS=(1,25),                                             *
+               LENGTH=21,                                              *
+               ATTRB=ASKIP,                                            *
+               INITIAL='CONSULTA FUNCIONARIOS'
+*****************************************************
+DATA    DFHMDF POS=(1,70),                                             *
+               LENGTH=10,                                              *
+               ATTRB=ASKIP
+*****************************************************
+HORA    DFHMDF POS=(2,70),                                             *
+               LENGTH=08,                                              *
+               ATTRB=ASKIP
+*****************************************************
+        DFHMDF POS=(4,15),                                             *
+               LENGTH=21,                                              *
+               ATTRB=ASKIP,                                            *
+               INITIAL='CODIGO DO FUNCIONARIO'
+*****************************************************
+CODIGO  DFHMDF POS=(4,37),                                             *
+               LENGTH=04,                                              *
+               ATTRB=(UNPROT,BRT,FSET,IC)
+*****************************************************
+        DFHMDF POS=(4,42),                                             *
+               LENGTH=0,                                               *
+               ATTRB=ASKIP
+*****************************************************
+        DFHMDF POS=(6,15),                                             *
+               LENGTH=14,                                              *
+               ATTRB=ASKIP,                                            *
+               INITIAL='NOME         :'
+*****************************************************
+NOME    DFHMDF POS=(6,30),                                             *
+               LENGTH=30,                                              *
+               ATTRB=ASKIP
+*****************************************************
+        DFHMDF POS=(7,15),                                             *
+               LENGTH=14,                                              *
+               ATTRB=ASKIP,                                            *
+               INITIAL='SALARIO      :'
+*****************************************************
+SALINT  DFHMDF POS=(7,30),                                             *
+               LENGTH=06,                                              *
+               ATTRB=ASKIP,                                            *
+               PICOUT='ZZZZZ9'
+*****************************************************
+        DFHMDF POS=(7,37),                                             *
+               LENGTH=01,                                              *
+               ATTRB=ASKIP,                                            *
+               INITIAL=','
+*****************************************************
+SALDEC  DFHMDF POS=(7,39),                                             *
+               LENGTH=06,                                              *
+               ATTRB=ASKIP,                                            *
+               PICOUT='99'
+*****************************************************
+        DFHMDF POS=(8,15),                                             *
+               LENGTH=14,                                              *
+               ATTRB=ASKIP,                                            *
+               INITIAL='DEPARTAMENTO :'
+*****************************************************
+DEPTO   DFHMDF POS=(8,30),                                             *
+               LENGTH=03,                                              *
+               ATTRB=ASKIP
+*****************************************************
+        DFHMDF POS=(9,15),                                             *
+               LENGTH=14,                                              *
+               ATTRB=ASKIP,                                            *
+               INITIAL='ADMISSAO     :'
+*****************************************************
+DIAADM  DFHMDF POS=(9,30),                                             *
+               LENGTH=02,                                              *
+               ATTRB=ASKIP,                                            *
+               PICOUT='99'
+*****************************************************
+        DFHMDF POS=(9,33),                                             *
+               LENGTH=01,                                              *
+               ATTRB=ASKIP,                                            *
+               INITIAL='/'
+*****************************************************
+MESADM  DFHMDF POS=(9,35),                                             *
+               LENGTH=02,                                              *
+               ATTRB=ASKIP,                                            *
+               PICOUT='99'
+*****************************************************
+        DFHMDF POS=(9,38),                                             *
+               LENGTH=01,                                              *
+               ATTRB=ASKIP,                                            *
+               INITIAL='/'
+*****************************************************
+ANOADM  DFHMDF POS=(9,40),                                             *
+               LENGTH=04,                                              *
+               ATTRB=ASKIP,                                            *
+               PICOUT='9999'
+*****************************************************
+        DFHMDF POS=(10,15),                                            *
+               LENGTH=14,                                              *
+               ATTRB=ASKIP,                                            *
+               INITIAL='IDADE        :'
+*****************************************************
+IDADE   DFHMDF POS=(10,30),                                            *
+               LENGTH=02,                                              *
+               ATTRB=ASKIP,                                            *
+               PICOUT='99'
+*****************************************************
+        DFHMDF POS=(11,15),                                            *
+               LENGTH=14,                                              *
+               ATTRB=ASKIP,                                            *
+               INITIAL='EMAIL        :'
+*****************************************************
+EMAIL   DFHMDF POS=(11,30),                                            *
+               LENGTH=30,                                              *
+               ATTRB=ASKIP
+*****************************************************
+        DFHMDF POS=(13,01),                                            *
+               LENGTH=42,                                              *
+               ATTRB=ASKIP,                                            *
+               INITIAL='F3-MENU  F7-ANTERIOR  F8-PROXIMO  F12-EXIT'
+*****************************************************
+MSG     DFHMDF POS=(15,01),                                            *
+        LENGTH=79,                                                     *
+        ATTRB=ASKIP
+*****************************************************
+        DFHMSD TYPE=FINAL
+        END
+
+
+-----------------------------------------------------------------------------------------------------------------------
+PARA COMPILAR O PROGRAMA ACIMA:
+
+GR.EAD569.JOBLIB(COMPMAPA) - 01.08
+
+//ALUNOMAP JOB 'EAD569',MSGCLASS=X,CLASS=C,NOTIFY=ALUNO
+//*=================================================================
+//* JCL PARA COMPILAR MAPAS
+//*  NAME - SEU MAPA   -   INSTR = SUA CHAVE
+//*=================================================================
+//         JCLLIB ORDER=GR.GERAL.PROCLIB
+//MAPSAMP  EXEC DFHMAPCS,NAME=AD569MB,INSTR='EAD569'
+
+--------------------------------------------------------------------------------------------
+
+
+GR.EAD569.COBLIB(AD569PA) - 01.00
+
+
+        IDENTIFICATION DIVISION.                                        
+        PROGRAM-ID.                                                     
+            AD569PA.                                                    
+        AUTHOR.                                                         
+            ANDRE.                                                      
+       ******************************************                       
+       *     MENU DE FUNCIONARIOS (CICS)        *                       
+       ******************************************                       
+       *                                                                
+        ENVIRONMENT DIVISION.                                           
+        CONFIGURATION SECTION.                                          
+        SPECIAL-NAMES.                                                  
+            DECIMAL-POINT IS COMMA.                                     
+        INPUT-OUTPUT SECTION.                                           
+        FILE-CONTROL.                                                   
+       * 
+        DATA DIVISION.                                                  
+        FILE SECTION.                                                   
+        WORKING-STORAGE SECTION.                                        
+            COPY AD569MA.
+        01  WK-AREA-COM.
+            05 WK-CODFUN-COM   PIC X(4) VALUE SPACES.                        
+        77  WK-RET-CICS      PIC S9(4)   COMP VALUE ZEROS.
+        77  WK-RET-CICS-EDIT PIC ZZ9     VALUE ZEROS.
+        77  WK-MAPA-DESENHADO PIC X           VALUE 'N'.
+        77  WK-DATA          PIC S9(15)  COMP-3 VALUE ZEROS.
+        77  WK-PROGRAMA      PIC X(8)    VALUE SPACES.
+        LINKAGE SECTION.
+        01  DFHCOMMAREA.
+            05 LK-CODFUN     PIC X(4).
+       *                                                                
+        PROCEDURE DIVISION.                                             
+        000-PRINCIPAL SECTION.                                          
+        001-PRINCIPAL.                                                  
+            PERFORM 101-INICIAR.                                        
+            IF WK-MAPA-DESENHADO = 'S'                                  
+                PERFORM 201-PROCESSAR                                   
+            END-IF.                                                     
+            PERFORM 901-FINALIZAR.   
+            EXEC CICS                                                   
+                RETURN                                                  
+            END-EXEC.                                                   
+       **************************************                           
+        100-INICIAR SECTION.                                            
+        101-INICIAR.
+            MOVE LOW-VALUES TO MAPMENUI.
+            IF EIBCALEN > 0
+                PERFORM 102-LE-COMMAREA
+            ELSE
+                PERFORM 103-LE-TELA
+            END-IF.
+        102-LE-COMMAREA.
+            MOVE LK-CODFUN TO CODIGOI.
+            MOVE 'N'  TO WK-MAPA-DESENHADO.
+        103-LE-TELA.
+            EXEC CICS RECEIVE
+                MAPSET('AD569MA')                                       
+                MAP('MAPMENU')                                          
+                INTO(MAPMENUI)                                          
+                RESP(WK-RET-CICS)                                       
+            END-EXEC.                                                   
+            EVALUATE WK-RET-CICS                                        
+                WHEN DFHRESP(NORMAL)                                    
+                    MOVE 'S'  TO WK-MAPA-DESENHADO                      
+                WHEN DFHRESP(MAPFAIL)                                   
+                    MOVE 'N'  TO WK-MAPA-DESENHADO                      
+                WHEN OTHER
+                    MOVE 'ERRO XXX NO RECEIVE'  TO  MSGO
+                    MOVE WK-RET-CICS  TO WK-RET-CICS-EDIT
+                    MOVE WK-RET-CICS-EDIT TO MSGO(6:3)
+                    EXEC CICS SEND TEXT
+                        FROM(MSGO)
+                        ERASE
+                        FREEKB
+                    END-EXEC
+                    EXEC CICS
+                        RETURN
+                    END-EXEC
+            END-EVALUATE.                                               
+       **********************************                               
+        200-PROCESSAR SECTION.                                          
+        201-PROCESSAR.                                                  
+            EVALUATE EIBCPOSN                                           
+                WHEN 415
+                    MOVE 'AD569PB'  TO WK-PROGRAMA
+                    PERFORM 202-CALL
+                WHEN 495                                                
+                    MOVE 'AD569PC'  TO WK-PROGRAMA
+                    PERFORM 202-CALL              
+                WHEN 575                                                 
+                    MOVE 'EXCLUSAO NAO PROGRAMADA' TO MSGO              
+                WHEN 655                                                
+                    MOVE 'ALTERACAO NAO PROGRAMADA' TO MSGO             
+                WHEN OTHER                                              
+                    MOVE 'FAVOR COLOCAR O CURSOR EM UMA FUNCAO' TO MSGO 
+            END-EVALUATE.
+        202-CALL.
+            MOVE CODIGOI TO WK-CODFUN-COM.
+            EXEC CICS XCTL
+                PROGRAM(WK-PROGRAMA)
+                COMMAREA(WK-AREA-COM)
+                RESP(WK-RET-CICS)
+            END-EXEC.
+            EVALUATE WK-RET-CICS                                        
+                WHEN DFHRESP(NORMAL)                                    
+                    CONTINUE                      
+                WHEN DFHRESP(PGMIDERR)                                   
+                    MOVE 'PROGRAMA XXXXXXXX NÃO ENCONTRADO' TO MSGO
+                    MOVE WK-PROGRAMA TO MSGO(10:8)
+                WHEN OTHER                                              
+                    MOVE 'ERRO XXX NO XCTL'  TO  MSGO                
+                    MOVE WK-RET-CICS  TO WK-RET-CICS-EDIT               
+                    MOVE WK-RET-CICS-EDIT TO MSGO(6:3)                  
+                    EXEC CICS                                           
+                        RETURN                                          
+                    END-EXEC                                            
+            END-EVALUATE.                                        
+       **************************************                           
+        900-FINALIZAR SECTION.                                          
+        901-FINALIZAR.                                                  
+            EXEC CICS ASKTIME                                           
+                ABSTIME(WK-DATA)                                        
+            END-EXEC.                                                   
+            EXEC CICS FORMATTIME                                        
+                ABSTIME(WK-DATA)                                        
+                DDMMYYYY(DATAO)                                         
+                DATESEP('/')                                            
+                TIME(HORAO)                                             
+                TIMESEP(':')                                            
+            END-EXEC.
+            IF EIBCALEN > 0
+                EXEC CICS SEND                                          
+                    MAPSET('AD569MA')                                   
+                    MAP('MAPMENU')
+                    FROM(MAPMENUO)   
+                    ERASE                                               
+                END-EXEC 
+            ELSE
+                IF WK-MAPA-DESENHADO = 'N'                                  
+                    EXEC CICS SEND                                          
+                        MAPSET('AD569MA')                                   
+                        MAP('MAPMENU')                                      
+                        MAPONLY                                             
+                        ERASE                                               
+                    END-EXEC                                                
+                ELSE                                                        
+                    EXEC CICS SEND                                          
+                        MAPSET('AD569MA')                                   
+                        MAP('MAPMENU')                                      
+                        DATAONLY                                            
+                        FROM(MAPMENUO)                                      
+                    END-EXEC
+                 END-IF
+            END-IF.
+
+
+GR.EAD569.JOBLIB(COMPCICS)
+
+
+//EAD569XX JOB 'COMPCICS',MSGCLASS=X,CLASS=C,NOTIFY=&SYSUID
+//*=================================================       
+//* JCL PARA COMPILAR PROGRAMAS CICS                       
+//*  NAME - NOME DO SEU PROGRAMA                           
+//*  INSTR - SUA CHAVE                                     
+//*=================================================       
+//         JCLLIB ORDER=GR.GERAL.PROCLIB                   
+//*                                                        
+//COMPPLI  EXEC DFHCICS1,NAME=AD569PA,INSTR='EAD569',     
+//         LIB2='GR.GERAL'             
+
+================================================================================================================
+
+
+
+GR.EAD569.COBLIB(AD569PB) - 01.00
+
+
+        IDENTIFICATION DIVISION.                                        
+        PROGRAM-ID.                                                     
+            AD569PB.                                                    
+        AUTHOR.                                                         
+            ANDRE.                                                      
+       ******************************************                       
+       *     CONSULTA FUNCIONARIOS (CICS)       *                       
+       ******************************************                       
+       *                                                                
+        ENVIRONMENT DIVISION.                                           
+        CONFIGURATION SECTION.                                          
+        SPECIAL-NAMES.                                                  
+            DECIMAL-POINT IS COMMA.                                     
+        INPUT-OUTPUT SECTION.                                           
+        FILE-CONTROL.                                                   
+       * 
+        DATA DIVISION.                                                  
+        FILE SECTION.                                                   
+        WORKING-STORAGE SECTION.                                        
+            COPY AD569MB.
+            COPY DFHAID.
+            EXEC SQL
+                INCLUDE BOOKFUNC
+            END-EXEC.
+            EXEC SQL
+                INCLUDE SQLCA
+            END EXEC.
+        01  WK-SALARIO-NUM     PIC 9(6)V99     VALUE ZEROS.
+        01  WK-SALARIO-ALFA    REDEFINES WK-SALARIO-NUM.
+            03 WK-SALINT-ALFA  PIC 9(6).
+            03 WK-SALDEC-ALFA  PIC 9(2).
+        77  WK-SQLCODE-EDIT    PIC -999        VALUE ZEROS.
+        77  WK-INDICATOR-EMAIL PIC S9(4) COMP  VALUE ZEROS.
+        01  WK-AREA-COM.
+            05 WK-CODFUN-COM   PIC X(4) VALUE SPACES.                                               
+        77  WK-RET-CICS      PIC S9(4)   COMP  VALUE ZEROS.              
+        77  WK-RET-CICS-EDIT PIC ZZ9           VALUE ZEROS. 
+        77  WK-MAPA-DESENHADO PIC X           VALUE 'N'.                
+        77  WK-DATA          PIC S9(15)  COMP-3 VALUE ZEROS.
+        77  WK-PROGRAMA      PIC X(8)    VALUE SPACES.
+        LINKAGE SECTION.
+        01  DFHCOMMAREA.
+            05 LK-CODFUN     PIC X(4).
+       *
+        PROCEDURE DIVISION.                                             
+        000-PRINCIPAL SECTION.                                          
+        001-PRINCIPAL.                                                  
+            PERFORM 101-INICIAR.                                        
+            PERFORM 201-PROCESSAR.                                   
+            PERFORM 901-FINALIZAR.   
+            EXEC CICS                                                   
+                RETURN
+                TRANSID('AADB')
+            END-EXEC.                                                   
+       **************************************                           
+        100-INICIAR SECTION.                                            
+        101-INICIAR.
+            MOVE LOW-VALUES TO MAPCONSI.
+            IF EIBCALEN > 0
+                PERFORM 102-LE-COMMAREA
+            ELSE
+                PERFORM 103-LE-TELA
+            END-IF.
+        102-LE-COMMAREA.
+            MOVE LK-CODFUN TO CODIGOI.
+        103-LE-TELA.
+            EXEC CICS RECEIVE                                           
+                MAPSET('AD569MB')                                       
+                MAP('MAPCONS')                                          
+                INTO(MAPCONSI)                                          
+                RESP(WK-RET-CICS)                                       
+            END-EXEC.                                                   
+            EVALUATE WK-RET-CICS                                        
+                WHEN DFHRESP(NORMAL)                                    
+                    MOVE 'S'  TO WK-MAPA-DESENHADO                      
+                WHEN DFHRESP(MAPFAIL)
+                    MOVE 'FAVOR INICIAR PELO MENU' TO MSGO
+                    PERFORM 220-RETURN           
+                WHEN OTHER                                              
+                    MOVE 'ERRO XXX NO RECEIVE'  TO  MSGO                
+                    MOVE WK-RET-CICS  TO WK-RET-CICS-EDIT               
+                    MOVE WK-RET-CICS-EDIT TO MSGO(6:3)
+                    PERFORM 220-RETURN                                          
+            END-EVALUATE.                                               
+       **********************************                               
+        200-PROCESSAR SECTION.                                          
+        201-PROCESSAR.
+            EVALUATE EIBAID
+               WHEN DFHPF3
+                   PERFORM 202-CALL
+               WHEN DFHPF7
+                   PERFORM 210-LE-ANTERIOR
+               WHEN DFHPF8
+                   PERFORM 211-LE-PROXIMO
+               WHEN DFHPF12
+                   MOVE 'PRESSIONE <ESC>' TO MSGO
+                   PERFORM 220-RETURN
+               WHEN OTHER
+                   PERFORM 212-LE-FUNCIONARIO
+            END-EVALUATE.
+        202-CALL.
+            MOVE CODIGOI TO WK-CODFUN-COM.
+            MOVE 'AD569PA'  TO WK-PROGRAMA.
+            EXEC CICS XCTL
+                PROGRAM(WK-PROGRAMA)
+                COMMAREA(WK-AREA-COM)
+                RESP(WK-RET-CICS)
+            END-EXEC.
+            EVALUATE WK-RET-CICS                                        
+                WHEN DFHRESP(NORMAL)                                    
+                    CONTINUE                      
+                WHEN DFHRESP(PGMIDERR)                                   
+                    MOVE 'PROGRAMA XXXXXXXX' NÃO ENCONTRADO TO MSGO
+                    MOVE WK-PROGRAMA TO MSGO(10:8)
+                WHEN OTHER                                              
+                    MOVE 'ERRO XXX NO XCTL'  TO  MSGO                
+                    MOVE WK-RET-CICS  TO WK-RET-CICS-EDIT               
+                    MOVE WK-RET-CICS-EDIT TO MSGO(6:3)
+                    PERFORM 220-RETURN                                       
+            END-EVALUATE.
+        210-LE-ANTERIOR.
+            MOVE SPACES  TO DB2-NOMEFUN-TEXT.
+            MOVE SPACES  TO DB2-EMAILFUN-TEXT.
+            MOVE CODIGOI TO DB2-CODFUN.
+            EXEC SQL
+                SELECT *
+                    INTO :DB2-CODFUN,
+                         :DB2-NOMEFUN,
+                         :DB2-SALARIOFUN,
+                         :DB2-DEPTOFUN,
+                         :DB2-ADMISSFUN,
+                         :DB2-IDADEFUN,
+                         :DB2-EMAILFUN INDICATOR :WK-INDICATOR-EMAIL
+                FROM EAD569.FUNCIONARIOS
+                WHERE CODFUN < :DB2-CODFUN
+                ORDER BY CODFUN DESC
+                FETCH FIRST ROW ONLY
+            END-EXEC.
+            IF WK-INDICATOR-EMAIL = -1
+                MOVE '----------------' TO DB2-EMAILFUN
+            END-IF.
+            EVALUATE SQL CODE
+                WHEN 0
+                    PERFORM 213-CARREGA-TELA
+                WHEN 100
+                    MOVE 'FIM DA TABELA' TO MSGO
+                WHEN OTHER
+                    MOVE SQLCODE  TO WK-SQLCODE-EDIT
+                    MOVE 'ERRO XXXX NO COMANDO SELECT'  TO MSGO
+                    MOVE WK-SQLCODE-EDIT TO MSGO(6:4)
+            END-EVALUATE.
+          211-LE-PROXIMO.
+            MOVE SPACES  TO DB2-NOMEFUN-TEXT.
+            MOVE SPACES  TO DB2-EMAILFUN-TEXT.
+            MOVE CODIGOI TO DB2-CODFUN.
+            EXEC SQL
+                SELECT *
+                    INTO :DB2-CODFUN,
+                         :DB2-NOMEFUN,
+                         :DB2-SALARIOFUN,
+                         :DB2-DEPTOFUN,
+                         :DB2-ADMISSFUN,
+                         :DB2-IDADEFUN,
+                         :DB2-EMAILFUN INDICATOR :WK-INDICATOR-EMAIL
+                FROM EAD569.FUNCIONARIOS
+                WHERE CODFUN > :DB2-CODFUN
+                ORDER BY CODFUN ASC
+                FETCH FIRST ROW ONLY
+            END-EXEC.
+            IF WK-INDICATOR-EMAIL = -1
+                MOVE '----------------' TO DB2-EMAILFUN
+            END-IF.
+            EVALUATE SQL CODE
+                WHEN 0
+                    PERFORM 213-CARREGA-TELA
+                WHEN 100
+                    MOVE 'FIM DA TABELA' TO MSGO
+                WHEN OTHER
+                    MOVE SQLCODE  TO WK-SQLCODE-EDIT
+                    MOVE 'ERRO XXXX NO COMANDO SELECT'  TO MSGO
+                    MOVE WK-SQLCODE-EDIT TO MSGO(6:4)
+            END-EVALUATE.
+        212-LE-FUNCIONARIO.
+            MOVE SPACES  TO DB2-NOMEFUN-TEXT.
+            MOVE SPACES  TO DB2-EMAILFUN-TEXT.
+            MOVE CODIGOI TO DB2-CODFUN.
+            EXEC SQL
+                SELECT *
+                    INTO :DB2-CODFUN,
+                         :DB2-NOMEFUN,
+                         :DB2-SALARIOFUN,
+                         :DB2-DEPTOFUN,
+                         :DB2-ADMISSFUN,
+                         :DB2-IDADEFUN,
+                         :DB2-EMAILFUN INDICATOR :WK-INDICATOR-EMAIL
+                FROM EAD569.FUNCIONARIOS
+                WHERE CODFUN = :DB2-CODFUN
+                FETCH FIRST ROW ONLY
+                ORDER BY CODFUN ASC
+            END-EXEC.
+            IF WK-INDICATOR-EMAIL = -1
+                MOVE '----------------' TO DB2-EMAILFUN
+            END-IF.
+            EVALUATE SQL CODE
+                WHEN 0
+                    PERFORM 213-CARREGA-TELA
+                WHEN 100
+                    MOVE 'FUNCIONARIO XXXX NAO EXISTE' TO MSGO
+                    MOVE DB2-CODFUN  TO MSGO(13:4)
+                WHEN OTHER
+                    MOVE SQLCODE  TO WK-SQLCODE-EDIT
+                    MOVE 'ERRO XXXX NO COMANDO SELECT'  TO MSGO
+                    MOVE WK-SQLCODE-EDIT TO MSGO(6:4)
+            END-EVALUATE.
+        213-CARREGA-TELA.
+            MOVE DB2-CODFUN TO CODIGOO.
+            MOVE DB2-NOMEFUN-TEXT TO NOMEO.
+            MOVE DB2-SALARIOFUN   TO WK-SALARIO-NUM.
+            MOVE WK-SALINT-ALFA   TO SALINTO.
+            MOVE WK-SALDEC-ALFA   TO SALDECO.
+            MOVE DB2-DEPTOFUN     TO DEPTOO.
+            MOVE DB2-ADMISSFUN(9:2) TO DIAADMO.
+            MOVE DB2-ADMISSFUN(6:2) TO MESADMO.
+            MOVE DB2-ADMISSFUN(1:4) TO ANOADMO.
+            MOVE DB2-IDADEFUN       TO IDADEO.
+            MOVE DB2-EMAILFUN-TEXT  TO EMAILO.
+            MOVE 'FUNCIONARIO XXXX LIDO COM SUCESSO' TO MSGO.
+            MOVE DB2-CODFUN         TO MSGO(13:4).
+        220-RETURN.
+            EXEC CICS SEND TEXT
+                FIELD(MSGO)
+                ERASE
+                FREEKB
+            END-EXEC
+            EXEC CICS                                           
+                RETURN                                          
+            END-EXEC.
+       **************************************                           
+        900-FINALIZAR SECTION.                                          
+        901-FINALIZAR.                                                  
+            EXEC CICS ASKTIME                                           
+                ABSTIME(WK-DATA)                                        
+            END-EXEC.                                                   
+            EXEC CICS FORMATTIME                                        
+                ABSTIME(WK-DATA)                                        
+                DDMMYYYY(DATAO)                                         
+                DATESEP('/')                                            
+                TIME(HORAO)                                             
+                TIMESEP(':')                                            
+            END-EXEC.                                                   
+            IF EIBCALEN > 0                                  
+                EXEC CICS SEND                                          
+                    MAPSET('AD569MB')                                   
+                    MAP('MAPCONS')
+                    ERASE
+                    FROM(MAPCONSO)
+                END-EXEC
+            ELSE                                                        
+                EXEC CICS SEND                                          
+                    MAPSET('AD569MB')                                   
+                    MAP('MAPCONS')                                      
+                    DATAONLY                                            
+                    FROM(MAPCONSO)                                      
+                END-EXEC                                                
+            END-IF.
+
+
+
+OBS: ANTES, SEMPRE COMPILÁVAMOS OS PROGRAMAS COM O COMPCICS. NO PROGRAMA ACIMA VAMOS COMPILAR COM O JCL COMPCIDB(CICS COM DB2).
+
+GR.EAD569.JOBLIB(COMPCIDB) - 01.03
+
+//AD569CID JOB 'EAD569',MSGCLASS=X,CLASS=C,NOTIFY=&SYSUID
+//*--------------------------------------------------------------------*
+//*      JOB DE COMPILACAO DE PROGRAMA COBOL COM DB2 CICS  (USANDO MENU*
+//*      NAME - NOME DO SEU PROGRAMA
+//*      INSTR - SUA CHAVE
+//*   ATENCAO - PARA PROGRAMAS SEM MENU, USAR SO O PRIMEIRO BIND
+//*   ATENCAO - NO ULTIMO BIND COLOCAR O PROGRAMA MENU
+//*--------------------------------------------------------------------*
+// JCLLIB ORDER=GR.GERAL.PROCLIB
+//COMPCIDB EXEC DFHCIDB2,NAME='AD569PB',INSTR='EAD569'
+//BIND-SYSTSIN  DD *
+DSN SYSTEM(DB8G)
+BIND PLAN(AD569PB) MEM(AD569PB) ACT(REP) ISOLATION(CS)    -
+     LIB('DSN810.DBRMLIB.DATA')
+BIND PACKAGE(EAD569) MEM(AD569PB) ACT(REP) ISOLATION(CS)   -
+     LIB('DSN810.DBRMLIB.DATA') VALIDATE(BIND)
+BIND PLAN(AD569PA) PKLIST(EAD569.*)
+                     VALIDATE(BIND)  ACT(REP) ISOLATION(CS)
+END
+//*
+
+
+Abrir outra conexão no tn3270 e conectar no CICS para cadastrar o mapa, o programa e a transação
+
+1º - Cadastrar o mapa
+ceda def map
+
+CEDA  DEFine Mapset( AD569MB   )
+ mapset         : AD569MB
+ Group          :EAD569
+
+2º - Cadastrar o programa
+
+def prog
+
+CEDA  DEFine PROGram( AD569PB   )
+ PROGram        : AD569PB
+ Group          : EAD569
+Language      ==> Cobol
+
+3º - Cadastrar a transação
+
+def trans
+
+CEDA  DEFine PROGram( ADAB   )
+ TRANSACTION  ==> ADAB
+ Group          : EAD569
+ PROGram        : AD569PB
+ 
+Language      ==> Cobol
+
+4º - Cadastrar o PLAN do MENU
+
+def db2e
+
+CEDA  DEFine DB2Entry( AD569PA   )
+ DB2Entry     ==> AD569PA
+ Group        ==> EAD569
+ TRansid      ==> AADA
+ PLAN         ==> AD569PA
+
+5º - Cadastrar o PLAN da CONSULTA
+
+def db2e
+
+CEDA  DEFine DB2Entry( AD569PB   )
+ DB2Entry     ==> AD569PB
+ Group        ==> EAD569
+ TRansid      ==> AADB
+ PLAN         ==> AD569PB
+
+OBS: Depois de cadastrar vamos instalar
+
+dis gr(EAD569)
+
+OBS: depois de instalar vamos fazer uma cópia nova
+
+cemt set prog(AD569PA) new
+cemt set prog(AD569PB) new
+cemt set prog(AD569MB) new
+
+Debugando no CICS
+
+cedf
+
+
